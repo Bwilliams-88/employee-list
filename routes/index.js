@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 
 async function mainMenu() {
-    const answer = await inquirer.createPromptModule([
+    const answer = await inquirer.prompt([
         {
             type: 'list',
             name: 'menuChoice',

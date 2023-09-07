@@ -24,7 +24,52 @@ function mainMenu() {
            ],
         },
     ]) .then((answers) => {
-        console.log(answers);
-    })
+            switch (answers.menuChoice) {
+            case 'View all departments':
+                    db.connect((err) => {
+                        if (err) {
+                            console.error('Error connecting to MySQL:', err);
+                            return;
+                          }
+                          console.log('Connected to MySQL database');
+                    })
+                    db.query('SELECT * FROM department', (err, results, fields) => {
+                        if (err) {
+                          console.error('Error executing query:', err);
+                          return;
+                        }
+                        // Process the query results
+                        console.table(results)});
+                break;
+            
+            case 'View all roles':
+                // run some code
+                break;
 
+            case 'View all employees':
+                // run some code
+                break;
+            case 'Add a department':
+                // run some code
+                break;
+            
+            case 'Add a role':
+                // run some code
+                break;
+
+            case 'Add an employee':
+                // run some code
+                break;
+
+            case 'Update an employee role':
+                // run some code
+                break;
+            
+            case 'Exit':
+                // run some code
+                process.exit();
+            
+        }}
+
+)
 }

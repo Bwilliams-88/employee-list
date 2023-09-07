@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 const employees = require('../../models/employees');
 
-router.post('/', (req, res) => {
+router.post('/employee/create', (req, res) => {
     employees.create({
         id: req.body.id,
         first_name: req.body.first_name,

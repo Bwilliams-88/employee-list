@@ -108,7 +108,7 @@ function mainMenu() {
             case 'Add an employee':
                 inquirer.prompt ([               
                     {
-                        type: 'input',
+                        type: 'confirm',
                         name: 'newEmployee',
                         message: 'Would you like to add a new employee?',
                     },
@@ -126,19 +126,14 @@ function mainMenu() {
                         type: 'list',
                         name: 'employeeRole',
                         message: 'What department does this employee belong to?',
-                        choices: [
-                            'Engineering',
-                            'Finance',
-                            'Legal',
-                            'Sales',
-                        ],
+                        choices: ['Engineering','Finance','Legal','Sales',],
                     },
                     {
                         type: 'input',
                         name: 'isManager',
                         message: 'Is the employee a manager of assigned department?',
                     },
-                    ])
+                    ])                   
                     .then((data) => {                    
                         db.connect((err) => {
                             if (err) {
@@ -150,6 +145,13 @@ function mainMenu() {
                         console.log(data.employeeRole);
                         db.query(`SELECT id FROM department WHERE department_name = '${data.employeeRole}'`, (err, results) => {
                             console.log(results[0]);
+                            // const userChoice = prompt('Do you want to continue? (yes/no)').toLowerCase();
+                            // if(userChoice === 'no'){
+                            //     alert('Exiting the process.');
+                            //     process.exit();                        
+                            // } else {
+                            //     alert('Continuing with the process...');
+                            // };
                         const values = [data.firstName, data.lastName, results[0].id, null];
                         db.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)', values, (err, results, fields) => {
                             if (err) {
@@ -162,12 +164,33 @@ function mainMenu() {
                 break;
 
             case 'Update an employee role':
-                // UPDATE table_name SET column1 = value1, column2 = value 2 WHERE condtion
-                // run some code
+                const choices = [];
+                connection.query('SELECT name FROM employee', (err, results) => {
+                    if (err) {
+                        console.log('Error querying MySQL:', err);
+                        return;
+                    }
+                    results.forEach((row) => {
+                        choices.push({
+                            name: row.name,
+                            value: row.id,
+                        });
+                    });
+                })
+                connection.end()
+                
+                inquirer.prompt ([
+                    {
+                        type: 'list',
+                        name: 'selecteddItem',
+                    }
+                ])
+                db.query(`UPDATE employee SET role_id = ${results[0].id} WHERE id`, (err, results) => {
+                    console.log(results[0]);
+                });
                 break;
             
             case 'Exit':
-                // run some code
                 process.exit();
             
         }}

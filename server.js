@@ -51,14 +51,15 @@ function mainMenu() {
                             console.error('Error connecting to MySQL database', err);
                             return;
                         }
-                        console.log('Connected to MySQL database');
+                        console.log('Department added successfully!');
                     })
                     const values = [data.newDepartment];
                     db.query('INSERT INTO department (department_name) VALUES (?)', values, (err, results, fields) => {
                         if (err) {
-                            console.error('Error executing query:', err);
+                            console.error('Error added department:', err);
                         }
-                        console.table(results)});
+                        mainMenu();
+                    });
                 })
                 break;
             
@@ -92,16 +93,17 @@ function mainMenu() {
                                 console.error('Error connecting to MySQL database', err);
                                 return;
                             }
-                            console.log('Connected to MySQL database');
+                            console.log('Role added successfully!');
                         })
                         db.query(`SELECT id FROM department WHERE department_name = '${data.department}'`, (err, results) => {
                             const values = [data.newRole, data.salary, results[0].id]
                             db.query('INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)', values, (err, results) => {
                                 if (err) {
-                                    console.error('Error executing query:', err);
+                                    console.error('Error adding new role:', err);
                                 }                        
                         });
-                        });
+                        mainMenu();
+                        });                       
                     })
                 break;
 
@@ -140,26 +142,20 @@ function mainMenu() {
                                 console.error('Error connecting to MySQL database', err);
                                 return;
                             }
-                            console.log('Connected to MySQL database');
+                            console.log('Employee added successfully!');
                         })
-                        console.log(data.employeeRole);
+                        // console.log(data.employeeRole);
                         db.query(`SELECT id FROM department WHERE department_name = '${data.employeeRole}'`, (err, results) => {
-                            console.log(results[0]);
-                            // const userChoice = prompt('Do you want to continue? (yes/no)').toLowerCase();
-                            // if(userChoice === 'no'){
-                            //     alert('Exiting the process.');
-                            //     process.exit();                        
-                            // } else {
-                            //     alert('Continuing with the process...');
-                            // };
+                            // console.log(results[0]);
                         const values = [data.firstName, data.lastName, results[0].id, null];
                         db.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)', values, (err, results, fields) => {
                             if (err) {
-                                console.error('Error executing query:', err);
+                                console.error('Error adding new employee:', err);
                             }
-                            console.table(results)
+                            mainMenu();
                         });
                     })
+                    
                 });
                 break;
 
@@ -186,7 +182,7 @@ function mainMenu() {
                     }
                 ])
                 db.query(`UPDATE employee SET role_id = ${results[0].id} WHERE id`, (err, results) => {
-                    console.log(results[0]);
+                    console.log(results[0]);              
                 });
                 break;
             
@@ -210,6 +206,7 @@ function queryData(str){
         if (err) {
             console.error('Error executing query:', err);
         }
-        console.table(results)
+        console.table(results);
+        mainMenu();
     });
 }
